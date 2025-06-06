@@ -79,6 +79,23 @@
 
   <input type="text" id="customPmh" placeholder="e.g., lupus" style="display:none;">
 
+  <h2>Common Complaints: Upper Respiratory Infection</h2>
+  <label for="coughType">Cough Type:</label>
+  <select id="coughType">
+    <option value="">None</option>
+    <option value="dry">dry</option>
+    <option value="producing clear mucus">producing clear mucus</option>
+    <option value="producing white mucus">producing white mucus</option>
+    <option value="producing yellow mucus">producing yellow mucus</option>
+    <option value="producing green mucus">producing green mucus</option>
+  </select>
+
+  <label><input type="checkbox" id="nasalCongestion"> Nasal Congestion</label>
+  <label><input type="checkbox" id="headache"> Headache</label>
+  <label><input type="checkbox" id="bodyAches"> Body Aches</label>
+  <label><input type="checkbox" id="fever"> Fever</label>
+  <input type="text" id="feverTemp" placeholder="Enter max temperature (e.g., 101.5°F or 38.5°C)">
+
   <button onclick="generateNote()">Generate Triage Note</button>
 
   <h3>Generated Note:</h3>
@@ -107,33 +124,6 @@
       customPmhInput.style.display = selectedOptions.includes('custom') ? 'block' : 'none';
     });
 
-    function generateNote() {
-      const age = document.getElementById('age').value;
-      const gender = document.getElementById('gender').value;
-      const selectedOptions = Array.from(pmhSelect.selectedOptions).map(opt => opt.value);
-      const customText = document.getElementById('customPmh').value.trim();
-
-      if (!age || !gender) {
-        document.getElementById('output').innerText = "Please complete age and gender.";
-        document.getElementById('copyBtn').style.display = "none";
-        return;
-      }
-
-      let pmhList = [];
-
-      for (let item of selectedOptions) {
-        if (item === "custom" && customText) {
-          pmhList.push(customText);
-        } else if (abbreviations[item]) {
-          pmhList.push(abbreviations[item]);
-        } else if (item !== "custom") {
-          pmhList.push(item);
-        }
-      }
-
-      let pmhText = pmhList.length === 0
-        ? "with no PMH reported"
-        : `with PMH of ${pmhList.join(", ")}`;
     function generateNote() {
       const age = document.getElementById('age').value;
       const gender = document.getElementById('gender').value;
@@ -180,7 +170,7 @@
 
       const symptomText = symptoms.length > 0 ? ` c/o ${symptoms.join(", ")} since 2 days ago.` : "";
 
-      const note = `${age}-year-old ${gender} ${pmhText} presents to clinic today.`;
+      const note = `${age}-year-old ${gender} ${pmhText} presents to clinic today${symptomText}`;
       document.getElementById('output').innerText = note;
       document.getElementById('copyBtn').style.display = "block";
     }
@@ -189,12 +179,8 @@
       const output = document.getElementById('output').innerText;
       if (!output) return;
       navigator.clipboard.writeText(output)
-        .then(() => {
-          alert("Triage note copied to clipboard!");
-        })
-        .catch(err => {
-          alert("Failed to copy note.");
-        });
+        .then(() => alert("Triage note copied to clipboard!"))
+        .catch(() => alert("Failed to copy note."));
     }
   </script>
 </body>
