@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Triage Note Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Triage Note Generator</h1>
+  <form id="triageForm">
+    <label>Age & Sex: <input type="text" id="ageSex" placeholder="e.g., 35 yo female"></label><br>
+    <label>PMH: <input type="text" id="pmh" placeholder="e.g., HTN, DM2"></label><br>
+    <label>Chief Complaint: <input type="text" id="complaint" placeholder="e.g., ear pain"></label><br>
+    <label>Additional Info: <textarea id="details"></textarea></label><br>
+    <button type="button" onclick="generateNote()">Generate Note</button>
+  </form>
+  <h2>Generated Note:</h2>
+  <pre id="output"></pre>
+
+  <script src="script.js"></script>
+</body>
+</html>
