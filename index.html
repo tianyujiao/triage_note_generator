@@ -1,21 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Triage Note Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    label, select, button {
+      margin-top: 10px;
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <h1>Triage Note Generator</h1>
-  <form id="triageForm">
-    <label>Age & Sex: <input type="text" id="ageSex" placeholder="e.g., 35 yo female"></label><br>
-    <label>PMH: <input type="text" id="pmh" placeholder="e.g., HTN, DM2"></label><br>
-    <label>Chief Complaint: <input type="text" id="complaint" placeholder="e.g., ear pain"></label><br>
-    <label>Additional Info: <textarea id="details"></textarea></label><br>
-    <button type="button" onclick="generateNote()">Generate Note</button>
-  </form>
-  <h2>Generated Note:</h2>
-  <pre id="output"></pre>
 
-  <script src="script.js"></script>
+  <label for="age">Patient Age:</label>
+  <select id="age">
+    <option value="" disabled selected>Select age</option>
+    ${[...Array(101).keys()].slice(1).map(age => `<option value="${age}">${age}</option>`).join('')}
+  </select>
+
+  <label for="gender">Patient Gender:</label>
+  <select id="gender">
+    <option value="" disabled selected>Select gender</option>
+    <option value="male">male</option>
+    <option value="female">female</option>
+    <option value="trans">trans</option>
+  </select>
+
+  <label for="pmh">Past Medical History (PMH):</label>
+  <select id="pmh">
+    <option value="none">No PMH reported</option>
+    <option value="HTN">PMH of HTN</option>
+    <option value="HLD">PMH of HLD</option>
+    <option value="DM2">PMH of DM2</option>
+    <option value="asthma">PMH of asthma</option>
+    <option value="custom">Other (type below)</option>
+  </select>
+
+  <input type="text" id="customPmh" placeholder="e.g., hypothyroidism" style="display:none;">
+
+  <button onclick="generateNote()">Generate Triage Note</button>
+
+  <h3>Generated Note:</h3>
+  <p id="output"></p>
+
+  <script>
+    const pmhSelect = document.getElementById('pmh');
+    const customPmhInput = document.getElementById('customPmh');
+
+    pmhSelect.addEventListener('change', () => {
+      if (pmhSelect.value === 'custom') {
+        customPmhInput.style.display = 'block';
+      } else {
+        customPmhInput.style.display = 'none';
+      }
+    });
+
+    function generateNote() {
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const pmhValue = document.getElementById('pmh').value;
+      const customPmh = document.getElementById('customPmh').value.trim();
+
+      if (!age || !gender || !pmhValue) {
+        document.getElementById('output').innerText = "Please fill out all fields.";
+        return;
+      }
+
+      let pmhText = "with no PMH reported";
+      if (pmhValue === 'custom' && customPmh) {
+        pmhText = `with PMH of ${customPmh}`;
+      } else if (pmhValue !== 'none' && pmhValue !== 'custom') {
+        pmhText = `with PMH of ${pmhValue}`;
+      }
+
+      const note = `${age}-year-old ${gender} ${pmhText} presents to clinic today.`;
+      document.getElementById('output').innerText = note;
+    }
+  </script>
 </body>
 </html>
