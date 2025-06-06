@@ -81,18 +81,22 @@
 
   <h3>Generated Note:</h3>
   <div id="output"></div>
+
   <button id="copyBtn" onclick="copyNote()" style="display:none;">Copy Note</button>
-  function copyNote() {
-    const output = document.getElementById('output').innerText;
-    if (!output) return;
-    navigator.clipboard.writeText(output)
-      .then(() => {
-        alert("Triage note copied to clipboard!");
-      })
-      .catch(err => {
-        alert("Failed to copy note.");
-      });
-   }
+
+  <script>
+    function copyNote() {
+      const output = document.getElementById('output').innerText;
+      if (!output) return;
+      navigator.clipboard.writeText(output)
+        .then(() => {
+          alert("Triage note copied to clipboard!");
+        })
+        .catch(err => {
+          alert("Failed to copy note.");
+        });
+    }
+  </script>
 
   <script>
     const pmhSelect = document.getElementById('pmh');
