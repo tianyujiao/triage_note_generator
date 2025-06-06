@@ -134,6 +134,51 @@
       let pmhText = pmhList.length === 0
         ? "with no PMH reported"
         : `with PMH of ${pmhList.join(", ")}`;
+    function generateNote() {
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const selectedOptions = Array.from(pmhSelect.selectedOptions).map(opt => opt.value);
+      const customText = document.getElementById('customPmh').value.trim();
+      const coughType = document.getElementById('coughType').value;
+      const nasalCongestion = document.getElementById('nasalCongestion').checked;
+      const headache = document.getElementById('headache').checked;
+      const bodyAches = document.getElementById('bodyAches').checked;
+      const fever = document.getElementById('fever').checked;
+      const feverTemp = document.getElementById('feverTemp').value.trim();
+
+      if (!age || !gender) {
+        document.getElementById('output').innerText = "Please complete age and gender.";
+        document.getElementById('copyBtn').style.display = "none";
+        return;
+      }
+
+      let pmhList = [];
+      for (let item of selectedOptions) {
+        if (item === "custom" && customText) {
+          pmhList.push(customText);
+        } else if (abbreviations[item]) {
+          pmhList.push(abbreviations[item]);
+        } else if (item !== "custom") {
+          pmhList.push(item);
+        }
+      }
+
+      let pmhText = pmhList.length === 0
+        ? "with no PMH reported"
+        : `with PMH of ${pmhList.join(", ")}`;
+
+      let symptoms = [];
+      if (coughType) symptoms.push(`cough (${coughType})`);
+      if (nasalCongestion) symptoms.push("nasal congestion");
+      if (headache) symptoms.push("headache");
+      if (bodyAches) symptoms.push("body aches");
+      if (fever && feverTemp) {
+        symptoms.push(`fever (max ${feverTemp})`);
+      } else if (fever) {
+        symptoms.push("fever");
+      }
+
+      const symptomText = symptoms.length > 0 ? ` c/o ${symptoms.join(", ")} since 2 days ago.` : "";
 
       const note = `${age}-year-old ${gender} ${pmhText} presents to clinic today.`;
       document.getElementById('output').innerText = note;
