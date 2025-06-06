@@ -39,7 +39,10 @@
   <label for="age">Patient Age:</label>
   <input list="ageList" id="age" name="age" type="number" placeholder="e.g., 35" min="0" max="120">
   <datalist id="ageList">
-    ${[...Array(101).keys()].slice(1).map(age => `<option value="${age}">`).join('')}
+    <option value="18"><option value="25"><option value="30"><option value="35"><option value="40">
+    <option value="45"><option value="50"><option value="55"><option value="60"><option value="65">
+    <option value="70"><option value="75"><option value="80"><option value="85"><option value="90">
+    <option value="95"><option value="100">
   </datalist>
 
   <label for="gender">Patient Gender:</label>
@@ -54,26 +57,25 @@
   </select>
 
   <label for="pmh">Past Medical History (PMH):<br><small>(Hold Ctrl or Cmd to select multiple)</small></label>
-<select id="pmh" multiple>
-  <option value="Hypertension">Hypertension (HTN)</option>
-  <option value="Hyperlipidemia">Hyperlipidemia (HLD)</option>
-  <option value="T1DM">Type 1 Diabetes Mellitus (T1DM)</option>
-  <option value="T2DM">Type 2 Diabetes Mellitus (T2DM)</option>
-  <option value="GERD">Gastroesophageal Reflux Disease (GERD)</option>
-  <option value="COPD">Chronic Obstructive Pulmonary Disease (COPD)</option>
-  <option value="asthma">asthma</option>
-  <option value="hypothyroidism">hypothyroidism</option>
-  <option value="hyperthyroidism">hyperthyroidism</option>
-  <option value="prostatitis">prostatitis</option>
-  <option value="CKD">Chronic Kidney Disease (CKD)</option>
-  <option value="CHF">Congestive Heart Failure (CHF)</option>
-  <option value="CAD">Coronary Artery Disease (CAD)</option>
-  <option value="stroke">stroke</option>
-  <option value="seizure disorder">seizure disorder</option>
-  <option value="cancer">cancer</option>
-  <option value="custom">Other (type below)</option>
-</select>
-
+  <select id="pmh" multiple>
+    <option value="Hypertension">Hypertension (HTN)</option>
+    <option value="Hyperlipidemia">Hyperlipidemia (HLD)</option>
+    <option value="T1DM">Type 1 Diabetes Mellitus (T1DM)</option>
+    <option value="T2DM">Type 2 Diabetes Mellitus (T2DM)</option>
+    <option value="GERD">Gastroesophageal Reflux Disease (GERD)</option>
+    <option value="COPD">Chronic Obstructive Pulmonary Disease (COPD)</option>
+    <option value="asthma">asthma</option>
+    <option value="hypothyroidism">hypothyroidism</option>
+    <option value="hyperthyroidism">hyperthyroidism</option>
+    <option value="prostatitis">prostatitis</option>
+    <option value="CKD">Chronic Kidney Disease (CKD)</option>
+    <option value="CHF">Congestive Heart Failure (CHF)</option>
+    <option value="CAD">Coronary Artery Disease (CAD)</option>
+    <option value="stroke">stroke</option>
+    <option value="seizure disorder">seizure disorder</option>
+    <option value="cancer">cancer</option>
+    <option value="custom">Other (type below)</option>
+  </select>
 
   <input type="text" id="customPmh" placeholder="e.g., lupus" style="display:none;">
 
@@ -85,27 +87,8 @@
   <button id="copyBtn" onclick="copyNote()" style="display:none;">Copy Note</button>
 
   <script>
-    function copyNote() {
-      const output = document.getElementById('output').innerText;
-      if (!output) return;
-      navigator.clipboard.writeText(output)
-        .then(() => {
-          alert("Triage note copied to clipboard!");
-        })
-        .catch(err => {
-          alert("Failed to copy note.");
-        });
-    }
-  </script>
-
-  <script>
     const pmhSelect = document.getElementById('pmh');
     const customPmhInput = document.getElementById('customPmh');
-
-    pmhSelect.addEventListener('change', () => {
-      const selectedOptions = Array.from(pmhSelect.selectedOptions).map(opt => opt.value);
-      customPmhInput.style.display = selectedOptions.includes('custom') ? 'block' : 'none';
-    });
 
     const abbreviations = {
       Hypertension: "HTN",
@@ -117,8 +100,12 @@
       CKD: "CKD",
       CHF: "CHF",
       CAD: "CAD"
-      // Others will display as-is
     };
+
+    pmhSelect.addEventListener('change', () => {
+      const selectedOptions = Array.from(pmhSelect.selectedOptions).map(opt => opt.value);
+      customPmhInput.style.display = selectedOptions.includes('custom') ? 'block' : 'none';
+    });
 
     function generateNote() {
       const age = document.getElementById('age').value;
@@ -128,6 +115,7 @@
 
       if (!age || !gender) {
         document.getElementById('output').innerText = "Please complete age and gender.";
+        document.getElementById('copyBtn').style.display = "none";
         return;
       }
 
@@ -150,7 +138,18 @@
       const note = `${age}-year-old ${gender} ${pmhText} presents to clinic today.`;
       document.getElementById('output').innerText = note;
       document.getElementById('copyBtn').style.display = "block";
+    }
 
+    function copyNote() {
+      const output = document.getElementById('output').innerText;
+      if (!output) return;
+      navigator.clipboard.writeText(output)
+        .then(() => {
+          alert("Triage note copied to clipboard!");
+        })
+        .catch(err => {
+          alert("Failed to copy note.");
+        });
     }
   </script>
 </body>
